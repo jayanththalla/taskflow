@@ -83,8 +83,31 @@ const Login = () => {
                     </button>
                 </form>
 
-                <div className="mt-6 text-center text-xs text-gray-500">
-                    © 2024 TaskFlow. Secure Access.
+                <div className="mt-8 pt-6 border-t border-gray-700/50">
+                    <p className="text-gray-400 text-sm mb-3">Quick Login (Demo Accounts):</p>
+                    <div className="grid grid-cols-3 gap-2">
+                        <button
+                            type="button"
+                            onClick={() => { setEmail('admin@example.com'); setPassword('password123'); }}
+                            className="bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 text-xs py-2 rounded border border-purple-500/30 transition-colors"
+                        >
+                            Admin
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => { setEmail('manager@example.com'); setPassword('password123'); }}
+                            className="bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 text-xs py-2 rounded border border-blue-500/30 transition-colors"
+                        >
+                            Manager
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => { setEmail('user@example.com'); setPassword('password123'); }}
+                            className="bg-green-500/20 hover:bg-green-500/30 text-green-300 text-xs py-2 rounded border border-green-500/30 transition-colors"
+                        >
+                            User
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
