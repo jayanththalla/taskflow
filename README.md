@@ -3,8 +3,8 @@
 A production-ready full-stack MERN (PostgreSQL) application for managing projects and tasks with granular role-based access control.
 
 ## 🚀 Live Demo
-- **Frontend**: [Add Vercel Link Here]
-- **Backend**: [Add Render Link Here]
+- **Frontend**: [TaskFlow Vercel](https://taskflow-zeta-blush.vercel.app)
+- **Backend**: [TaskFlow Render API](https://taskflow-api-0tsz.onrender.com)
 
 ## 🛠 Tech Stack
 - **Frontend**: React.js, Redux Toolkit, Tailwind CSS (Glassmorphism UI), Vite

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api/axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { ArrowLeft, Plus, CheckCircle2, Circle, Clock } from 'lucide-react';
 import TaskModal from '../components/TaskModal';
@@ -21,7 +21,7 @@ const ProjectDetails = () => {
     const fetchProjectDetails = async () => {
         try {
             setLoading(true);
-            const { data } = await axios.get(`/api/projects/${id}`);
+            const { data } = await api.get(`/api/projects/${id}`);
             setProject(data);
         } catch (error) {
             console.error('Failed to fetch project', error);

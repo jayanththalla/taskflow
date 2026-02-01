@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
@@ -7,7 +7,7 @@ const AdminDashboard = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const { data } = await axios.get('/api/users');
+                const { data } = await api.get('/api/users');
                 setUsers(data);
             } catch (error) {
                 console.error('Failed to fetch users', error);

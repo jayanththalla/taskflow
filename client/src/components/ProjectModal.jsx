@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createProject } from '../features/projects/projectSlice';
 import { X, Loader2 } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/axios';
 
 const ProjectModal = ({ onClose }) => {
     const dispatch = useDispatch();
@@ -15,7 +15,7 @@ const ProjectModal = ({ onClose }) => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const { data } = await axios.get('/api/users');
+                const { data } = await api.get('/api/users');
                 setUsers(data);
             } catch (error) {
                 console.error('Failed to fetch users', error);

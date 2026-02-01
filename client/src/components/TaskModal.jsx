@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createTask } from '../features/tasks/taskSlice';
 import { X, Loader2 } from 'lucide-react';
-import axios from 'axios';
+import api from '../api/axios';
 
 const TaskModal = ({ projectId, onClose }) => {
     const dispatch = useDispatch();
@@ -18,7 +18,7 @@ const TaskModal = ({ projectId, onClose }) => {
         // Fetch users for assignment
         const fetchUsers = async () => {
             try {
-                const { data } = await axios.get('/api/users');
+                const { data } = await api.get('/api/users');
                 setUsers(data);
             } catch (error) {
                 console.error('Failed to fetch users', error);
