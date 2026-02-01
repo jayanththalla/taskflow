@@ -73,10 +73,10 @@ const ProjectDetails = () => {
                 <h3 className="text-xl font-bold text-white mb-4">Project Tasks</h3>
 
                 <div className="space-y-3">
-                    {project.tasks?.length === 0 ? (
+                    {!Array.isArray(project.tasks) || project.tasks.length === 0 ? (
                         <p className="text-gray-500">No tasks in this project yet.</p>
                     ) : (
-                        project.tasks?.map((task) => (
+                        project.tasks.map((task) => (
                             <div key={task.id} className="bg-gray-800/30 border border-gray-700/50 rounded-xl p-4 flex items-center justify-between">
                                 <div className="flex items-start gap-3">
                                     <div className="mt-1">{getStatusIcon(task.status)}</div>

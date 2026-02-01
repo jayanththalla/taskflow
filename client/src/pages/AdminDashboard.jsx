@@ -16,6 +16,31 @@ const AdminDashboard = () => {
         fetchUsers();
     }, []);
 
+    const handleDeleteUser = async (id) => {
+        if (window.confirm('Are you sure you want to delete this user?')) {
+            try {
+                await api.delete(`/api/users/${id}`);
+                setUsers(users.filter(user => user.id !== id));
+            } catch (error) {
+                console.error('Failed to delete user', error);
+                alert('Failed to delete user');
+            }
+        }
+    };
+
+    // Simple role toggle for now
+    const handleRoleUpdate = async (user) => {
+        const newRole = user.role === 'user' ? 'manager' : user.role === 'manager' ? 'admin' : 'user';
+        if (window.confirm(`Change role for ${user.name} to ${newRole}?`)) {
+            try {
+                const { data } = await api.put(`/api/users/${user.id}`, { role: newRole });
+                setUsers(users.map(u => u.id === user.id ? data : u));
+            } catch (error) {
+                console.error('Failed to update role', error);
+            }
+        }
+    };
+
     return (
         <div className="space-y-6">
             <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
@@ -45,8 +70,18 @@ const AdminDashboard = () => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
-                                        <button className="text-blue-400 hover:text-blue-300 mr-3">Edit</button>
-                                        <button className="text-red-400 hover:text-red-300">Delete</button>
+                                        <button
+                                            onClick={() => handleRoleUpdate(user)}
+                                            className="text-blue-400 hover:text-blue-300 mr-3"
+                                        >
+                                            Change Role
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteUser(user.id)}
+                                            className="text-red-400 hover:text-red-300"
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             ))}

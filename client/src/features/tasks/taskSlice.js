@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
+import api from '../../api/axios'
 
 export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (_, { rejectWithValue }) => {
     try {
-        const response = await axios.get('/api/tasks');
+        const response = await api.get('/api/tasks');
         return response.data;
     } catch (err) {
         return rejectWithValue(err.response.data);
@@ -12,7 +12,7 @@ export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (_, { rejec
 
 export const createTask = createAsyncThunk('tasks/createTask', async (taskData, { rejectWithValue }) => {
     try {
-        const response = await axios.post('/api/tasks', taskData);
+        const response = await api.post('/api/tasks', taskData);
         return response.data;
     } catch (err) {
         return rejectWithValue(err.response.data);
@@ -21,7 +21,7 @@ export const createTask = createAsyncThunk('tasks/createTask', async (taskData, 
 
 export const updateTaskStatus = createAsyncThunk('tasks/updateStatus', async ({ id, status }, { rejectWithValue }) => {
     try {
-        const response = await axios.put(`/api/tasks/${id}`, { status });
+        const response = await api.put(`/api/tasks/${id}`, { status });
         return response.data;
     } catch (err) {
         return rejectWithValue(err.response.data);

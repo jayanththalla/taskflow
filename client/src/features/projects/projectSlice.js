@@ -1,9 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
+import api from '../../api/axios'
 
 export const fetchProjects = createAsyncThunk('projects/fetchProjects', async (_, { rejectWithValue }) => {
     try {
-        const response = await axios.get('/api/projects');
+        const response = await api.get('/api/projects');
         return response.data;
     } catch (err) {
         return rejectWithValue(err.response.data);
@@ -12,7 +12,7 @@ export const fetchProjects = createAsyncThunk('projects/fetchProjects', async (_
 
 export const createProject = createAsyncThunk('projects/createProject', async (projectData, { rejectWithValue }) => {
     try {
-        const response = await axios.post('/api/projects', projectData);
+        const response = await api.post('/api/projects', projectData);
         return response.data;
     } catch (err) {
         return rejectWithValue(err.response.data);
@@ -21,7 +21,7 @@ export const createProject = createAsyncThunk('projects/createProject', async (p
 
 export const deleteProject = createAsyncThunk('projects/deleteProject', async (id, { rejectWithValue }) => {
     try {
-        await axios.delete(`/api/projects/${id}`);
+        await api.delete(`/api/projects/${id}`);
         return id;
     } catch (err) {
         return rejectWithValue(err.response.data);
