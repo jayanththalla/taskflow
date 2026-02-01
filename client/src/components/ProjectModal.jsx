@@ -4,7 +4,7 @@ import { createProject } from '../features/projects/projectSlice';
 import { X, Loader2 } from 'lucide-react';
 import api from '../api/axios';
 
-const ProjectModal = ({ onClose }) => {
+const ProjectModal = ({ onClose, project = null, onUpdate }) => {
     const dispatch = useDispatch();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -22,14 +22,38 @@ const ProjectModal = ({ onClose }) => {
             }
         };
         fetchUsers();
-    }, []);
+
+        if (project) {
+            setName(project.name);
+            setDescription(project.description);
+            // Assuming project.members is array of objects with id
+            if (project.members) {
+                setSelectedMembers(project.members.map(m => m.id));
+            }
+        }
+    }, [project]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        await dispatch(createProject({ name, description, members: selectedMembers }));
-        setLoading(false);
-        onClose();
+        try {
+            if (project) {
+                // Update specific API call directly or thunk?
+                // Using axios/api directly for update if thunk isn't set up fully or complex
+                // But let's check projectSlice... it doesn't have updateProject.
+                // Let's add updateProject to slice or just use api here.
+                // Using api direct for speed and simplicity in this verified fix
+                await api.put(`/api/projects/${project.id}`, { name, description, members: selectedMembers });
+                if (onUpdate) onUpdate(); // Refresh parent
+            } else {
+                await dispatch(createProject({ name, description, members: selectedMembers }));
+            }
+            onClose();
+        } catch (error) {
+            console.error('Failed to save project', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const toggleMember = (userId) => {
@@ -50,7 +74,9 @@ const ProjectModal = ({ onClose }) => {
                     <X size={20} />
                 </button>
 
-                <h3 className="text-xl font-bold text-white mb-6">Create New Project</h3>
+                <h3 className="text-xl font-bold text-white mb-6">
+                    {project ? 'Edit Project' : 'Create New Project'}
+                </h3>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
@@ -90,7 +116,7 @@ const ProjectModal = ({ onClose }) => {
                                     </label>
                                 </div>
                             ))}
-                            {users.length === 0 && <p className="text-sm text-gray-500">No users found.</p>}
+                            {users.filter(u => u.role !== 'admin').length === 0 && <p className="text-sm text-gray-500">No available users found.</p>}
                         </div>
                     </div>
 
@@ -99,7 +125,7 @@ const ProjectModal = ({ onClose }) => {
                         disabled={loading}
                         className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors flex justify-center"
                     >
-                        {loading ? <Loader2 className="animate-spin" /> : 'Create Project'}
+                        {loading ? <Loader2 className="animate-spin" /> : (project ? 'Save Changes' : 'Create Project')}
                     </button>
                 </form>
             </div>

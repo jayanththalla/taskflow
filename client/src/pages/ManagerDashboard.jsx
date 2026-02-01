@@ -10,7 +10,7 @@ const ManagerDashboard = () => {
     const dispatch = useDispatch();
     const { projects, isLoading } = useSelector((state) => state.projects);
     const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
-    // const [selectedProject, setSelectedProject] = useState(null);
+    const [selectedProject, setSelectedProject] = useState(null);
 
     useEffect(() => {
         dispatch(fetchProjects());
@@ -22,20 +22,26 @@ const ManagerDashboard = () => {
         }
     };
 
+    const handleEdit = (project) => {
+        setSelectedProject(project);
+        setIsProjectModalOpen(true);
+    };
+
+    const handleCreate = () => {
+        setSelectedProject(null);
+        setIsProjectModalOpen(true);
+    };
+
+    const handleUpdateSuccess = () => {
+        dispatch(fetchProjects());
+    };
+
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold text-white">Project Management</h2>
-                {/* Only Manager can create projects */}
-                {/* Actually requirement says: "Admin Dashboard: View all projects". Doesn't explicitly say create.
-            "Manager Dashboard: Create, update, delete projects". 
-            So Admin likely read-only or full access? Usually Admin has full access. 
-            But let's stick to spec? "Create / Edit / Delete users" is Admin. 
-            Let's allow Admin to create too for convenience, or hide it if strictly following "Manager Dashboard" feature list.
-            Let's allow it for now or check role.
-        */}
                 <button
-                    onClick={() => setIsProjectModalOpen(true)}
+                    onClick={handleCreate}
                     className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
                 >
                     <Plus size={18} />
@@ -54,7 +60,10 @@ const ManagerDashboard = () => {
                                     <Folder size={24} />
                                 </div>
                                 <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <button className="p-2 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white">
+                                    <button
+                                        onClick={() => handleEdit(project)}
+                                        className="p-2 hover:bg-white/10 rounded-lg text-gray-400 hover:text-white"
+                                    >
                                         <Edit2 size={16} />
                                     </button>
                                     <button
@@ -72,7 +81,7 @@ const ManagerDashboard = () => {
                             <div className="flex items-center justify-between pt-4 border-t border-gray-800">
                                 <div className="flex items-center gap-2 text-sm text-gray-500">
                                     <Users size={16} />
-                                    <span>{project.tasks?.length || 0} Tasks</span>
+                                    <span>{project.members?.length || 0} Members</span>
                                 </div>
                                 <Link to={`/manager/projects/${project.id}`} className="text-sm font-medium text-blue-400 hover:text-blue-300">
                                     View Details &rarr;
@@ -83,7 +92,13 @@ const ManagerDashboard = () => {
                 </div>
             )}
 
-            {isProjectModalOpen && <ProjectModal onClose={() => setIsProjectModalOpen(false)} />}
+            {isProjectModalOpen && (
+                <ProjectModal
+                    project={selectedProject}
+                    onClose={() => setIsProjectModalOpen(false)}
+                    onUpdate={handleUpdateSuccess}
+                />
+            )}
         </div>
     );
 };

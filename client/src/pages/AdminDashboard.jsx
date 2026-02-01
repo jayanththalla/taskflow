@@ -1,20 +1,24 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
+import { Plus, UserPlus } from 'lucide-react';
+import UserModal from '../components/UserModal';
 
 const AdminDashboard = () => {
     const [users, setUsers] = useState([]);
+    const [isUserModalOpen, setIsUserModalOpen] = useState(false);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const { data } = await api.get('/api/users');
-                setUsers(data);
-            } catch (error) {
-                console.error('Failed to fetch users', error);
-            }
-        };
         fetchUsers();
     }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const { data } = await api.get('/api/users');
+            setUsers(data);
+        } catch (error) {
+            console.error('Failed to fetch users', error);
+        }
+    };
 
     const handleDeleteUser = async (id) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
@@ -28,7 +32,6 @@ const AdminDashboard = () => {
         }
     };
 
-    // Simple role toggle for now
     const handleRoleUpdate = async (user) => {
         const newRole = user.role === 'user' ? 'manager' : user.role === 'manager' ? 'admin' : 'user';
         if (window.confirm(`Change role for ${user.name} to ${newRole}?`)) {
@@ -41,11 +44,27 @@ const AdminDashboard = () => {
         }
     };
 
+    const handleUserCreated = (newUser) => {
+        setUsers([...users, newUser]);
+    };
+
     return (
         <div className="space-y-6">
-            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
-                <h2 className="text-2xl font-bold mb-6 text-white">User Management</h2>
+            <div className="flex justify-between items-center bg-gray-900 border border-gray-800 rounded-2xl p-6">
+                <div>
+                    <h2 className="text-2xl font-bold text-white">User Management</h2>
+                    <p className="text-gray-400">View and manage system users</p>
+                </div>
+                <button
+                    onClick={() => setIsUserModalOpen(true)}
+                    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                >
+                    <UserPlus size={18} />
+                    New User
+                </button>
+            </div>
 
+            <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left text-sm text-gray-400">
                         <thead className="bg-gray-800 uppercase font-medium">
@@ -89,6 +108,13 @@ const AdminDashboard = () => {
                     </table>
                 </div>
             </div>
+
+            {isUserModalOpen && (
+                <UserModal
+                    onClose={() => setIsUserModalOpen(false)}
+                    onUserCreated={handleUserCreated}
+                />
+            )}
         </div>
     );
 };
