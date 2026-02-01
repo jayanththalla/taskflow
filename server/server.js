@@ -40,19 +40,18 @@ const startServer = async () => {
         await sequelize.authenticate();
         console.log('Database connected successfully.');
         // Sync models (force: false in production)
-        // Sync models
         await sequelize.sync({ alter: true }); // Using alter to update schema without losing data
 
         // Seed Database
         const seedDatabase = require('./config/seed');
         await seedDatabase();
-
-        app.listen(PORT, () => {
-            console.log(`Server running on port ${PORT}`);
-        });
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
+
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
 };
 
 startServer();
